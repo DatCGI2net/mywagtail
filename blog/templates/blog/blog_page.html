@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{%load static wagtailcore_tags%}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{%block pagetitle%}
+<!-- *****************************************************************************************************************
+	 BLUE WRAP
+	 ***************************************************************************************************************** -->
+	<div id="blue">
+	    <div class="container">
+			<div class="row">
+				<h3>{{page.title}}</h3>
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /blue -->
+{% endblock %}
+{% block content %}
+
+<!-- *****************************************************************************************************************
+	 BLOG CONTENT
+	 ***************************************************************************************************************** -->
+
+	 <div class="container mtb">
+	 	<div class="row">
+	 	
+	 		<! -- BLOG POSTS LIST -->
+	 		<div class="col-lg-8">
+	 			<! -- Blog Post 1 -->
+		 		
+		 		{%include 'blog/parts/post_meta.html' with post=page %}
+		 		
+		 		
+		 		<p>{{page.intro|richtext}}
+		 		<p>{{page.body|richtext}}
+		 		
+		 		<div class="spacing"></div>
+		 		<h6>SHARE:</h6>
+		 		<p class="share">
+		 			<a href="#"><i class="fa fa-twitter"></i></a>
+		 			<a href="#"><i class="fa fa-facebook"></i></a>
+		 			<a href="#"><i class="fa fa-tumblr"></i></a>
+		 			<a href="#"><i class="fa fa-google-plus"></i></a>		 		
+		 		</p>
+		 		
+		 		
+	 			
+		 		
+			</div><! --/col-lg-8 -->
+	 		
+	 		
+	 		<! -- SIDEBAR -->
+	 		
+	 		{%include 'blog/parts/blog_sidebar.html'  with tags=page.tags %}
+	 		
+	 		
+	 	</div><! --/row -->
+	 </div><! --/container -->
+
+
+
+{% endblock %}
+
+

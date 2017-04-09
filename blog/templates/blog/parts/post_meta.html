@@ -1,0 +1,12 @@
+{%load  wagtailcore_tags wagtailimages_tags  %}
+<p><img class="img-responsive" src="{{post.main_image.image}}">
+
+</p>
+
+		 		<a href="{% pageurl post%}"><h3 class="ctitle">{{post.title}}</h3></a>
+<p><csmall>Posted: {{post.date}}.</csmall> | <csmall2>
+{%if post.author%}
+By: {{ post.author.profile}} - 
+{%endif%}
+ {%if post.comments.all%}{{post.comments.all.count}}{%else%}0{%endif%} Comments</csmall2></p>
+		 		

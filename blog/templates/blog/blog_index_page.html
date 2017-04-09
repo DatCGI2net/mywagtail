@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{%load static wagtailcore_tags wagtailimages_tags  %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{%block pagetitle%}
+<!-- *****************************************************************************************************************
+	 BLUE WRAP
+	 ***************************************************************************************************************** -->
+	<div id="blue">
+	    <div class="container">
+			<div class="row">
+				<h3>Blog List.</h3>
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /blue -->
+{% endblock %}
+{% block content %}
+
+<!-- *****************************************************************************************************************
+	 BLOG CONTENT
+	 ***************************************************************************************************************** -->
+
+	 <div class="container mtb">
+	 	<div class="row">
+	 	
+	 		<! -- BLOG POSTS LIST -->
+	 		<div class="col-lg-8">
+	 			{% for post in blogpages %}
+	 			<! -- Blog Post 1 -->
+		 		
+		 		{%include 'blog/parts/post_meta.html' with post=post %}
+		 		
+		 		
+		 		<p>{{post.intro|richtext}}
+		 		
+		 		<p><a href="{% pageurl post%}">[Read More]</a></p>
+		 		<div class="hline"></div>
+		 		
+		 		<div class="spacing"></div>
+		 		
+		 		{%endfor%}
+		 		
+	 			
+		 		
+			</div><! --/col-lg-8 -->
+	 		
+	 		{%include 'blog/parts/blog_sidebar.html' with tags=tags%}
+	 		
+	 		<! -- SIDEBAR -->
+	 		
+	 	</div><! --/row -->
+	 </div><! --/container -->
+
+
+
+{% endblock %}
+
+

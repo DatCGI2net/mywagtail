@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{%load static wagtailcore_tags%}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{%block pagetitle%}
+<!-- *****************************************************************************************************************
+	 BLUE WRAP
+	 ***************************************************************************************************************** -->
+	<div id="blue">
+	    <div class="container">
+			<div class="row">
+				<h3>{{page.title}}</h3>
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /blue -->
+{% endblock %}
+{% block content %}
+
+<!-- *****************************************************************************************************************
+	 CONTACT FORMS
+	 ***************************************************************************************************************** -->
+
+	 <div class="container mtb">
+	 	<div class="row">
+	 		<div class="col-lg-8">
+	 			<h4>Just Get In Touch!</h4>
+	 			<div class="hline"></div>
+		 			{{page.thankyou_text |richtext}}
+			</div><! --/col-lg-8 -->
+	 		
+	 		{%include 'home/parts/contact_details.html'%}
+	 	</div><! --/row -->
+	 </div><! --/container -->
+
+
+
+
+{% endblock %}
+
+
