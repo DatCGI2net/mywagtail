@@ -22,6 +22,7 @@ from taggit.models import TaggedItemBase
 from wagtail.wagtaildocs.models import Document
 from blog.models import PageMixin
 from wagtail.wagtailcore import blocks
+from django.db.models.fields.related import ForeignKey
 
 
 
@@ -54,13 +55,14 @@ class ProjectDocument(Document):
     project = ParentalKey('home.ProjectPage', blank=True,
                           related_name='project_docs')
 
-
+class BlogPageTag(TaggedItemBase):
+    content_object = ParentalKey('ProjectPage', related_name="tagged_items")
     
 class ProjectPage(PageMixin):
     #page = ParentalKey(BlogPage, on_delete=models.CASCADE)
     #start_date = DateField(blank=True, null=True)
     #end_date = DateField(blank=True, null=True)
-    
+    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     ## override
     author = models.ForeignKey(User, on_delete=models.SET_NULL,
                                related_name='pageauthors', null=True, 
@@ -177,13 +179,20 @@ class HomePage(Page):
         blank=True, null=True
         )
     body = RichTextField()
+    
+    featured_portfolio = ForeignKey('PortfolioIndexPage', blank=True,
+                                    null=True)
 
     
+    """
+    portfolios = ParentalManyToManyField(ProjectPage, blank=True, 
+                                         related_name="project_portfolios")
     
-    #portfolios = ParentalManyToManyField(ProjectPage, blank=True, 
-    #                                     related_name="portfolio_projects")
-    #services = ParentalManyToManyField(ProjectPage, blank=True,
-    #                                   related_name="service_project")
+    """
+    
+    
+    ##services = ParentalManyToManyField(through='ServicePage', blank=True)                                  
+    
     #teams = ParentalManyToManyField('blog.Profile', blank=True)
     #clients = ParentalManyToManyField(Client, blank=True)
     
@@ -194,13 +203,36 @@ class HomePage(Page):
         FieldPanel('body', classname='full'),
         #InlinePanel("teams",label="Home Teams"),
         #InlinePanel("clients", label="Home Clients"),
-        #InlinePanel("portfolios", label="Home Portfolios"),
-        #InlinePanel("services", label="Home Services"),
+        FieldPanel("featured_portfolio"),
+        InlinePanel("blurbs", label="Our Services"),
                                                
         ]
     
+COLUMNS_CHOICES = (
+    ('6', 'Two columns'), # two columns use span6
+    ('4', 'Three columns'), # three columns use span4
+    ('3', 'Four Columns'), # four columns use span3
+)    
+class ServicePage(Orderable):
     
-#class Blurb():
+    content_object = ParentalKey(HomePage, blank=True,
+                           related_name="blurbs")
+    
+    projectpage = ParentalKey(ProjectPage, blank=True,)
+    
+    
+    
+class PortfolioIndexPage(Page):
+    
+    column = models.CharField(choices=COLUMNS_CHOICES, default=3,
+                              max_length=1)
+
+    body = RichTextField(blank=True, null=True)
+    
+    
+    
+
+    
 
 ##AbstractPage
 class AboutPage(Page):

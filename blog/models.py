@@ -33,15 +33,22 @@ class PersonBlock(blocks.StructBlock):
         template  = 'blog/parts/person.html'
         icon  = 'user'
         
+    def __str__(self):
+        return self.first_name
+    
+    def __unicode__(self):
+        return self.first_name
+
+@register_snippet        
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     person = StreamField(PersonBlock())
     
     def __str__(self):
-        return self.nickname
+        return self.person
     
     def __unicode__(self):
-        return self.nickname
+        return self.person
     
     
 
@@ -86,7 +93,7 @@ class PageMixin(Page):
     date = models.DateField(_('Post Date'))
     intro = RichTextField(max_length=250)
     body = RichTextField()
-    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+    ##tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     categories = ParentalManyToManyField(BlogCategory, blank=True) 
     
     
@@ -126,7 +133,7 @@ class BlogPage(PageMixin):
     #date = models.DateField(_('Post Date'))
     #intro = RichTextField(max_length=250)
     #body = RichTextField()
-    #tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     #categories = ParentalManyToManyField(BlogCategory, blank=True)
     #author = models.ForeignKey(User, on_delete=models.SET_NULL,
     #                           related_name='blogs', null=True, blank=True)
@@ -144,7 +151,7 @@ class BlogPage(PageMixin):
     """
     content_panels = PageMixin.content_panels +[
         MultiFieldPanel([
-            
+            ##FieldPanel('tags'),
             FieldPanel('author')
             ], heading='Basic Information'),
         
@@ -184,7 +191,7 @@ class BlogTagIndexPage(Page):
     def get_context(self, request, *args, **kwargs):
         ctx = super(BlogTagIndexPage, self).get_context(request, *args, **kwargs)
         tag = self.request.GET.get('tag', None)
-        if tag is none:
+        if tag is None:
             tag = 'blog'
             
         blogpages = BlogPage.objects.filter(tags__name=tag)
