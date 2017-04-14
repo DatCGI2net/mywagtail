@@ -1,0 +1,40 @@
+{%load wagtailcore_tags wagtailimages_tags %}
+<!-- *****************************************************************************************************************
+	 TESTIMONIALS
+	 ***************************************************************************************************************** -->
+	 <div id="twrap">
+	 	<div class="container centered">
+	 	{% with page.testimonial as testimonial %}
+	 		<div class="row">
+	 			<div class="col-lg-8 col-lg-offset-2">
+	 			<i class="fa fa-comment-o"></i>
+	 			
+	 			<p>{{testimonial.testimonial}}</p>
+	 			<h4><br/>{{testimonial.name}}</h4>
+	 			<p>{{testimonial.contact_title}}</p>
+	 			</div>
+	 		</div><! --/row -->
+	 	{%endwith%}
+	 	</div><! --/container -->
+	 </div><! --/twrap -->
+	 
+	<!-- *****************************************************************************************************************
+	 OUR CLIENTS
+	 ***************************************************************************************************************** -->
+	 <div id="cwrap">
+		 <div class="container">
+		 	<div class="row centered">
+			 	<h3>OUR CLIENTS</h3>
+			 	{% for client_placement in page.clients.all %}
+			 	
+			 	
+			 	<div class="col-lg-3 col-md-3 col-sm-3">
+			 		{% image client_placement.client.image original %}
+			 	</div>
+			 	
+			 	{%endfor%}
+			 	
+			 	
+		 	</div><! --/row -->
+		 </div><! --/container -->
+	 </div><! --/cwrap -->

@@ -27,7 +27,7 @@
 	 	
 	 		<! -- BLOG POSTS LIST -->
 	 		<div class="col-lg-8">
-	 			{% for post in blogpages %}
+	 			{% for post in blogpages.specific %}
 	 			<! -- Blog Post 1 -->
 		 		
 		 		{%include 'blog/parts/post_meta.html' with post=post %}

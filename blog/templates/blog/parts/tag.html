@@ -1,0 +1,6 @@
+{%load wagtailcore_tags %}
+{% for tag in tags.all %}
+          	<a class="btn btn-theme" href="{% slugurl 'tags' %}?tag={{tag.name}}" role="button">{{tag.name}}</a>
+          {% empty%}
+            <span>There is no tags</span>	
+          {%endfor%}

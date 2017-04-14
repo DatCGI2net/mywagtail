@@ -1,11 +1,12 @@
 from django.db import models
-from wagtail.wagtailcore.models import Page, Orderable, AbstractPage
+from wagtail.wagtailcore.models import Page, Orderable
+
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel,\
     InlinePanel
 from django.utils.translation import gettext_lazy as _
 from wagtail.wagtailsearch import index
-from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.wagtailcore.fields import RichTextField
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from taggit.models import TaggedItemBase
@@ -16,8 +17,9 @@ from wagtail.wagtailsnippets.models import register_snippet
 from django import forms
 from django.contrib.auth.models import User
 from wagtail.wagtailcore import blocks
-from pip._vendor.pkg_resources import require
+
 from wagtail.wagtailimages.blocks import ImageChooserBlock
+
 
 #User = get_user_model()
 
@@ -25,7 +27,7 @@ class PersonBlock(blocks.StructBlock):
     first_name = blocks.CharBlock(required=True)
     last_name = blocks.CharBlock(required=True)
     photo = ImageChooserBlock()
-    title = blocks.CharBlock(required=False)
+    job_title = blocks.CharBlock(required=False)
     biography = blocks.RichTextBlock()
     webssite = blocks.URLBlock(required=False)
 
@@ -41,16 +43,35 @@ class PersonBlock(blocks.StructBlock):
 
 @register_snippet        
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    person = StreamField(PersonBlock())
+    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ##person = StreamField(PersonBlock())
+    first_name = models.CharField(max_length=30)
+    last_name =  models.CharField(max_length=30)
+    photo =  models.ForeignKey(
+        'wagtailimages.Image', on_delete=models.SET_NULL, related_name='+',
+        blank=True, null=True
+        )
+    job_title =  models.CharField(max_length=30, blank=True, null=True)
+    biography =models.TextField(blank=True, null=True)
+    webssite = models.URLField(blank=True, null=True)
     
     def __str__(self):
-        return self.person
+        return "%s %s" % (self.first_name, self.last_name,)
+    
     
     def __unicode__(self):
-        return self.person
+        return "%s %s" % (self.first_name, self.last_name,)
     
     
+    
+    panels = [
+        FieldPanel('first_name'),
+        FieldPanel('last_name'),
+        FieldPanel('job_title'),
+        FieldPanel('biography'),
+        FieldPanel('webssite'),
+        ImageChooserPanel('photo'),
+        ]
 
 @register_snippet
 class BlogCategory(models.Model):
@@ -104,7 +125,7 @@ class PageMixin(Page):
     
     content_panels = Page.content_panels +[
         MultiFieldPanel([
-            FieldPanel('tags'),
+            #FieldPanel('tags'),
             FieldPanel('date'),
             FieldPanel('categories', widget=forms.CheckboxSelectMultiple),
             
@@ -129,7 +150,9 @@ class PageMixin(Page):
     class Meta:
         abstract = True
         
-class BlogPage(PageMixin):
+
+        
+class BlogPage(PageMixin, Page):
     #date = models.DateField(_('Post Date'))
     #intro = RichTextField(max_length=250)
     #body = RichTextField()
@@ -141,7 +164,11 @@ class BlogPage(PageMixin):
     author = models.ForeignKey(User, on_delete=models.SET_NULL,
                                related_name='blogauthors', null=True, 
                                blank=True)
+    isPost = models.BooleanField(default=True)
     
+    #client = models.ForeignKey('home.Client', on_delete=models.SET_NULL,
+    #                           blank=True,
+    #                           null=True, related_name='projects')
     ### categories
     """
     search_fields = Page.search_fields + [
@@ -151,10 +178,13 @@ class BlogPage(PageMixin):
     """
     content_panels = PageMixin.content_panels +[
         MultiFieldPanel([
-            ##FieldPanel('tags'),
-            FieldPanel('author')
+            FieldPanel('tags'),
+            FieldPanel('author'),
+            FieldPanel('isPost')
             ], heading='Basic Information'),
         
+        #InlinePanel("project_docs"),
+        #FieldPanel('client')
         
         ]
     """
@@ -170,7 +200,9 @@ class BlogPage(PageMixin):
         return None
     
     """
-            
+#class ProjectDocument(Document):
+#    project = ParentalKey('blog.BlogPage', blank=True,
+#                          related_name='project_docs')            
     
 class BlogPageGalleryImage(Orderable):
     
@@ -191,10 +223,11 @@ class BlogTagIndexPage(Page):
     def get_context(self, request, *args, **kwargs):
         ctx = super(BlogTagIndexPage, self).get_context(request, *args, **kwargs)
         tag = self.request.GET.get('tag', None)
-        if tag is None:
-            tag = 'blog'
+        blogpages = BlogPage.objects.filter(isPost=True)
+        if tag is not None:
+            ##tag = 'blog'
             
-        blogpages = BlogPage.objects.filter(tags__name=tag)
+            blogpages = blogpages.filter(tags__name=tag)
         
         ctx['blogpages'] = blogpages
             

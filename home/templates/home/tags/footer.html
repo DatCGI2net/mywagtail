@@ -1,0 +1,27 @@
+{% load wagtailcore_tags %}
+
+<div id="footerwrap">
+	 	<div class="container">
+		 	<div class="row">
+		 	{% for item in footerItems %}
+		 		<div class="col-lg-4">
+		 			<h4>{{item.title}}</h4>
+		 			<div class="hline-w"></div>
+		 			<p>
+		 			{% autoescape off %}
+		 			{{item.body | safe  }}
+		 			{% endautoescape %}
+		 			
+		 			</p>
+		 		</div>
+		 		{%empty%}
+		 		<div class="col-lg-12 col-xs-12">
+		 		<p>No footer items</p>
+		 		</div>
+		 		
+		 		{%endfor%}
+		 		
+		 	
+		 	</div><! --/row -->
+	 	</div><! --/container -->
+	 </div><! --/footerwrap -->

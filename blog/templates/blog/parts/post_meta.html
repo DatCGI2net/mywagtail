@@ -1,5 +1,7 @@
 {%load  wagtailcore_tags wagtailimages_tags  %}
-<p><img class="img-responsive" src="{{post.main_image.image}}">
+<p>
+{% image post.main_image original %}
+
 
 </p>
 

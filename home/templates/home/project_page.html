@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{%load static wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{%block pagetitle%}
+<!-- *****************************************************************************************************************
+	 BLUE WRAP
+	 ***************************************************************************************************************** -->
+	<div id="blue">
+	    <div class="container">
+			<div class="row">
+				<h3>{{page.title}}</h3>
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /blue -->
+{% endblock %}
+{% block content %}
+
+
+<!-- *****************************************************************************************************************
+	 TITLE & CONTENT
+	 ***************************************************************************************************************** -->
+
+	 <div class="container mt">
+	 	<div class="row">
+		 	<div class="col-lg-10 col-lg-offset-1 centered">
+			 	<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+				  <!-- Indicators -->
+				  <ol class="carousel-indicators">
+				  {%for image in page.page.gallery_images.all %}
+				  	<li data-target="#carousel-example-generic" data-slide-to="{{forloop.counter0}}" class="{%if forloop.first %}active{%endif%}"></li>
+				 
+				  {%endfor%}
+				    
+				  </ol>
+				
+				  <!-- Wrapper for slides -->
+				  <div class="carousel-inner">
+				  {%for image in page.page.gallery_images.all %}
+				  	<div class="item {%if forloop.first %}active{%endif%}">
+				      {% image image.image original %}
+				    </div>
+				  
+				  {%endfor%}
+				  </div>
+				</div><! --/Carousel -->
+		 	</div>
+		 	
+		 	<div class="col-lg-5 col-lg-offset-1">
+			 	<div class="spacing"></div>
+		 		{{page.page.body|richtext}}
+		 		
+		 	</div>
+		 	
+		 	<div class="col-lg-4 col-lg-offset-1">
+			 	<div class="spacing"></div>
+		 		<h4>Project Details</h4>
+		 		<div class="hline"></div>
+		 		<p><b>Date:</b> {{page.page.date}}</p>
+		 		<p><b>Author:</b> {{page.page.author}}</p>
+		 		<p><b>Categories:</b> {{page.page.categories}}</p>
+		 		<p><b>Tagged:</b>
+		 		{%include 'blog/parts/tag.html' with tags=page.page.tags %} 
+		 		
+		 		</p>
+		 		<p><b>Client:</b> {{page.client}}</p>
+		 		<p><b>Website:</b> <a href="{{page.client.url}}">{{page.client.url}}</a></p>
+		 		
+		 	</div>
+		 	
+	 	</div><! --/row -->
+	 </div><! --/container -->
+	 
+
+<!-- *****************************************************************************************************************
+	 PORTFOLIO SECTION
+	 ***************************************************************************************************************** -->
+	 <div id="portfoliowrap">
+        <div class="portfolio-centered">
+        	<h3>Related Works.</h3>
+            <div class="recentitems portfolio">
+            {%with page.get_siblings as siblings %}
+            {% for relpage in siblings.specific %}
+            {%if relpage != page %}
+            
+				<div class="portfolio-item graphic-design">
+					<div class="he-wrap tpl6">
+					{% image relpage.page.main_image original %}
+					
+						<div class="he-view">
+							<div class="bg a0" data-animate="fadeIn">
+                                <h3 class="a1" data-animate="fadeInDown">{{relpage.title}}</h3>
+                                <a data-rel="prettyPhoto" href="{{relpage.page.main_image}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
+                                <a href="{% pageurl relpage%}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
+                        	</div><!-- he bg -->
+						</div><!-- he view -->		
+					</div><!-- he wrap -->
+				</div><!-- end col-12 -->
+		{%endif%}
+				
+		{%endfor%}
+		{%endwith%}
+		
+		
+                                        
+                    
+            </div><!-- portfolio -->
+        </div><!-- portfolio container -->
+	 </div><!--/Portfoliowrap -->
+	 
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'js/portfolio.js' %}"></script>       
+{% endblock %}
