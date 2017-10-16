@@ -34,12 +34,7 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
             
-      ## deploy    
-      - deploy:
-          push_to_server:
-            branch: master
-            commands:
-              - rsync -avz _site/ datu_deploy@wagtail.cgito.net:apps
+      
               
       - save_cache:
           paths:
@@ -52,6 +47,13 @@ jobs:
           command: |
             . venv/bin/activate
             python manage.py test
+            
+      ## deploy    
+      - deploy:
+          push_to_server:
+            branch: master
+            commands:
+              - rsync -avz _site/ datu_deploy@wagtail.cgito.net:apps
 
       - store_artifacts:
           path: test-reports
