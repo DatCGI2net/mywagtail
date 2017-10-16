@@ -53,7 +53,7 @@ jobs:
           push_to_server:
             branch: master
             commands:
-              - rsync -avz _site/ datu_deploy@wagtail.cgito.net:apps
+              - rsync -avz _site/ datwagtail@wagtail.cgito.net:apps
 
       - store_artifacts:
           path: test-reports
