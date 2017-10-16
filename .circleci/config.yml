@@ -40,8 +40,7 @@ jobs:
             branch: master
             commands:
               - rsync -avz _site/ datu_deploy@wagtail.cgito.net:apps
-		
-
+              
       - save_cache:
           paths:
             - ./venv
